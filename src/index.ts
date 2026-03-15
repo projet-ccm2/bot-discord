@@ -1,9 +1,11 @@
 import express from "express";
 import { config } from "./config/environment";
+import notifyRouter from "./routes/notify";
 import { logger } from "./utils/logger";
 
 const app = express();
 app.disable("x-powered-by");
+app.use(express.json());
 
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -12,6 +14,8 @@ app.get("/health", (req, res) => {
     environment: config.nodeEnv,
   });
 });
+
+app.use("/", notifyRouter);
 
 if (config.nodeEnv !== "test") {
   const server = app.listen(config.port, () => {

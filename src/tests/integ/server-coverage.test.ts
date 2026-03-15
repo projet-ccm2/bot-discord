@@ -40,9 +40,17 @@ describe("Server Coverage Tests", () => {
       }),
       get: jest.fn(),
       disable: jest.fn(),
+      use: jest.fn(),
     };
 
-    jest.doMock("express", () => jest.fn(() => mockApp));
+    const mockRouter = { post: jest.fn() };
+    jest.doMock("express", () => {
+      const fn = Object.assign(jest.fn(() => mockApp), {
+        Router: jest.fn(() => mockRouter),
+        json: jest.fn(),
+      });
+      return fn;
+    });
 
     const mockLogger = {
       info: jest.fn(),
@@ -59,6 +67,7 @@ describe("Server Coverage Tests", () => {
       config: {
         nodeEnv: "development",
         port: 3000,
+        dbGatewayBaseUrl: "http://localhost:3000",
       },
     }));
 
