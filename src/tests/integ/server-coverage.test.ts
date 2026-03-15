@@ -45,10 +45,13 @@ describe("Server Coverage Tests", () => {
 
     const mockRouter = { post: jest.fn() };
     jest.doMock("express", () => {
-      const fn = Object.assign(jest.fn(() => mockApp), {
-        Router: jest.fn(() => mockRouter),
-        json: jest.fn(),
-      });
+      const fn = Object.assign(
+        jest.fn(() => mockApp),
+        {
+          Router: jest.fn(() => mockRouter),
+          json: jest.fn(),
+        },
+      );
       return fn;
     });
 

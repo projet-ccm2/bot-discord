@@ -31,7 +31,10 @@ describe("getChannelById", () => {
     });
     expect(mockFetch).toHaveBeenCalledWith(
       "https://gateway.example.com/channels/ch1",
-      expect.objectContaining({ method: "GET", headers: { Accept: "application/json" } }),
+      expect.objectContaining({
+        method: "GET",
+        headers: { Accept: "application/json" },
+      }),
     );
   });
 
@@ -107,7 +110,11 @@ describe("getChannelById", () => {
   });
 
   it("should throw DbGatewayError on 500", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, status: 500, statusText: "Internal Server Error" });
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: "Internal Server Error",
+    });
 
     await expect(
       getChannelById("https://gateway.example.com", "ch1"),

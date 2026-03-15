@@ -38,7 +38,9 @@ router.post("/notify", async (req: Request, res: Response): Promise<void> => {
       logger.warn("Channel has no Discord webhook URL", {
         channelId,
       });
-      res.status(404).json({ error: "Channel has no Discord webhook configured" });
+      res
+        .status(404)
+        .json({ error: "Channel has no Discord webhook configured" });
       return;
     }
 
