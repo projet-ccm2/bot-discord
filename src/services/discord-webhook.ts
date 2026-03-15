@@ -36,8 +36,9 @@ export async function sendEmbed(
   if (!response.ok) {
     const status = response.status;
     const bodyText = await response.text();
+    const suffix = bodyText ? ` - ${bodyText}` : "";
     throw new Error(
-      `Discord webhook failed: ${status} ${response.statusText}${bodyText ? ` - ${bodyText}` : ""}`,
+      `Discord webhook failed: ${status} ${response.statusText}${suffix}`,
     );
   }
 }

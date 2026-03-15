@@ -59,13 +59,15 @@ export async function getChannelById(
 
   const body = (await response.json()) as Record<string, unknown>;
   const id = typeof body.id === "string" ? body.id : String(body.id);
-  const name = typeof body.name === "string" ? body.name : String(body.name ?? "");
-  const discordWebhookUrl =
-    body.discordWebhookUrl == null
-      ? undefined
-      : typeof body.discordWebhookUrl === "string"
-        ? body.discordWebhookUrl
-        : undefined;
+  const name = typeof body.name === "string" ? body.name : "";
 
-  return { id, name, discordWebhookUrl: discordWebhookUrl || undefined };
+  let discordWebhookUrl: string | undefined;
+  const rawUrl = body.discordWebhookUrl;
+  if (rawUrl != null && typeof rawUrl === "string") {
+    discordWebhookUrl = rawUrl;
+  } else {
+    discordWebhookUrl = undefined;
+  }
+
+  return { id, name, discordWebhookUrl };
 }
