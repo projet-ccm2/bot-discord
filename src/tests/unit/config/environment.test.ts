@@ -15,11 +15,13 @@ describe("Environment Configuration", () => {
       delete process.env.PORT;
       delete process.env.NODE_ENV;
       delete process.env.ALLOWED_ORIGINS;
+      delete process.env.DB_GATEWAY_BASE_URL;
 
       const { config } = require("../../../config/environment");
 
       expect(config.port).toBe(3000);
       expect(config.nodeEnv).toBe("development");
+      expect(config.dbGatewayBaseUrl).toBe("http://localhost:3000");
       expect(config.cors.allowedOrigins).toEqual([
         "http://localhost:3000",
         "http://localhost:8080",
@@ -31,11 +33,13 @@ describe("Environment Configuration", () => {
       process.env.PORT = "8080";
       process.env.NODE_ENV = "production";
       process.env.ALLOWED_ORIGINS = "https://example.com,https://test.com";
+      process.env.DB_GATEWAY_BASE_URL = "https://db-gateway.example.com";
 
       const { config } = require("../../../config/environment");
 
       expect(config.port).toBe(8080);
       expect(config.nodeEnv).toBe("production");
+      expect(config.dbGatewayBaseUrl).toBe("https://db-gateway.example.com");
       expect(config.cors.allowedOrigins).toEqual([
         "https://example.com",
         "https://test.com",
@@ -78,12 +82,14 @@ describe("Environment Configuration", () => {
 
       expect(config).toHaveProperty("port");
       expect(config).toHaveProperty("nodeEnv");
+      expect(config).toHaveProperty("dbGatewayBaseUrl");
       expect(config).toHaveProperty("cors");
 
       expect(config.cors).toHaveProperty("allowedOrigins");
 
       expect(typeof config.port).toBe("number");
       expect(typeof config.nodeEnv).toBe("string");
+      expect(typeof config.dbGatewayBaseUrl).toBe("string");
       expect(Array.isArray(config.cors.allowedOrigins)).toBe(true);
     });
   });
