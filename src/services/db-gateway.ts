@@ -21,14 +21,6 @@ export class DbGatewayError extends Error {
   }
 }
 
-/**
- * Fetches a channel by ID from the DB-gateway.
- * @param baseUrl - DB-gateway base URL (e.g. from config.dbGatewayBaseUrl)
- * @param channelId - Channel ID
- * @returns Channel with optional discordWebhookUrl
- * @throws ChannelNotFoundError when channel does not exist (404)
- * @throws DbGatewayError on other HTTP errors or network failure
- */
 export async function getChannelById(
   baseUrl: string,
   channelId: string,

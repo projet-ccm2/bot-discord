@@ -3,13 +3,6 @@ export interface SendEmbedOptions {
   color?: number;
 }
 
-/**
- * Sends an embed message to a Discord webhook URL.
- * @param webhookUrl - Full Discord webhook URL (https://discord.com/api/webhooks/...)
- * @param text - Embed description content
- * @param options - Optional title and color (decimal integer)
- * @throws Error on non-2xx response from Discord
- */
 export async function sendEmbed(
   webhookUrl: string,
   text: string,

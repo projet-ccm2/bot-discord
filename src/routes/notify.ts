@@ -32,7 +32,7 @@ router.post("/notify", async (req: Request, res: Response): Promise<void> => {
 
   try {
     const channel = await getChannelById(config.dbGatewayBaseUrl, channelId);
-    const webhookUrl = channel.discordWebhookUrl; // Ne jamais logger cette URL (secret)
+    const webhookUrl = channel.discordWebhookUrl;
 
     if (!webhookUrl || webhookUrl.length === 0) {
       logger.warn("Channel has no Discord webhook URL", {
