@@ -15,7 +15,7 @@ describe("Environment Configuration", () => {
       delete process.env.PORT;
       delete process.env.NODE_ENV;
       delete process.env.ALLOWED_ORIGINS;
-      delete process.env.DB_GATEWAY_BASE_URL;
+      delete process.env.DB_SERVICE_URL;
 
       const { config } = require("../../../config/environment");
 
@@ -33,7 +33,7 @@ describe("Environment Configuration", () => {
       process.env.PORT = "8080";
       process.env.NODE_ENV = "production";
       process.env.ALLOWED_ORIGINS = "https://example.com,https://test.com";
-      process.env.DB_GATEWAY_BASE_URL = "https://db-gateway.example.com";
+      process.env.DB_SERVICE_URL = "https://db-gateway.example.com";
 
       const { config } = require("../../../config/environment");
 
