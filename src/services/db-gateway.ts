@@ -1,3 +1,5 @@
+import { logger } from "../utils/logger";
+
 export interface Channel {
   id: string;
   name: string;
@@ -27,6 +29,8 @@ export async function getChannelById(
 ): Promise<Channel> {
   const url = `${baseUrl.replace(/\/$/, "")}/channels/${encodeURIComponent(channelId)}`;
 
+  logger.debug("getChannelById → request", { url });
+
   let response: Response;
   try {
     response = await fetch(url, {
@@ -37,6 +41,8 @@ export async function getChannelById(
     const message = err instanceof Error ? err.message : "Network error";
     throw new DbGatewayError(`Failed to fetch channel: ${message}`);
   }
+
+  logger.debug("getChannelById → response", { status: response.status, url });
 
   if (response.status === 404) {
     throw new ChannelNotFoundError(channelId);
@@ -60,6 +66,13 @@ export async function getChannelById(
   } else {
     discordWebhookUrl = undefined;
   }
+
+  logger.debug("getChannelById → resolved channel", {
+    id,
+    name,
+    hasWebhook: discordWebhookUrl != null,
+    ...(process.env.NODE_ENV === "development" && { discordWebhookUrl }),
+  });
 
   return { id, name, discordWebhookUrl };
 }

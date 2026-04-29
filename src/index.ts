@@ -3,6 +3,15 @@ import { config } from "./config/environment";
 import notifyRouter from "./routes/notify";
 import { logger } from "./utils/logger";
 
+if (config.nodeEnv === "development") {
+  logger.debug("Resolved config", {
+    port: config.port,
+    nodeEnv: config.nodeEnv,
+    dbGatewayBaseUrl: config.dbGatewayBaseUrl,
+    cors: config.cors,
+  });
+}
+
 const app = express();
 app.disable("x-powered-by");
 app.use(express.json());

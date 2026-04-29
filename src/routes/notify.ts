@@ -21,6 +21,8 @@ router.post("/notify", async (req: Request, res: Response): Promise<void> => {
   const title =
     typeof body.title === "string" ? body.title.trim() || undefined : undefined;
 
+  logger.debug("POST /notify received", { channelId, title, hasText: !!text });
+
   if (!channelId) {
     res.status(400).json({ error: "channelId required" });
     return;
@@ -34,6 +36,12 @@ router.post("/notify", async (req: Request, res: Response): Promise<void> => {
     const channel = await getChannelById(config.dbGatewayBaseUrl, channelId);
     const webhookUrl = channel.discordWebhookUrl;
 
+    logger.debug("Channel resolved", {
+      channelId,
+      hasWebhook: !!webhookUrl,
+      ...(config.nodeEnv === "development" && { webhookUrl }),
+    });
+
     if (!webhookUrl || webhookUrl.length === 0) {
       logger.warn("Channel has no Discord webhook URL", {
         channelId,
@@ -44,7 +52,9 @@ router.post("/notify", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    logger.debug("Dispatching to Discord webhook", { channelId });
     await sendEmbed(webhookUrl, text, { title });
+    logger.debug("Discord webhook sent successfully", { channelId });
     res.status(200).json({ success: true });
   } catch (err) {
     if (err instanceof ChannelNotFoundError) {
