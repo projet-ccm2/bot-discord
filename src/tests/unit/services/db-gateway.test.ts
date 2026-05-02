@@ -1,8 +1,4 @@
-import {
-  getChannelById,
-  ChannelNotFoundError,
-  DbGatewayError,
-} from "../../../services/db-gateway";
+import { getChannelById } from "../../../services/db-gateway";
 
 const mockFetch = jest.fn();
 beforeEach(() => {

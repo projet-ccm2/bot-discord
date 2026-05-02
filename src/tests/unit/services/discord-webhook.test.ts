@@ -13,7 +13,7 @@ describe("sendEmbed", () => {
     await sendEmbed("https://discord.com/api/webhooks/1/token", "Hello world");
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://discord.com/api/webhooks/1/token",
+      new URL("https://discord.com/api/webhooks/1/token"),
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,5 +52,26 @@ describe("sendEmbed", () => {
     await expect(
       sendEmbed("https://discord.com/api/webhooks/1/token", "Hi"),
     ).rejects.toThrow("Discord webhook failed");
+  });
+
+  it("should throw on malformed URL", async () => {
+    await expect(sendEmbed("not-a-url", "Hi")).rejects.toThrow(
+      "Invalid Discord webhook URL",
+    );
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("should throw on non-HTTPS URL", async () => {
+    await expect(
+      sendEmbed("http://discord.com/api/webhooks/1/token", "Hi"),
+    ).rejects.toThrow("Discord webhook URL must use HTTPS");
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("should throw on non-Discord domain", async () => {
+    await expect(
+      sendEmbed("https://evil.com/api/webhooks/1/token", "Hi"),
+    ).rejects.toThrow("Discord webhook URL must target a Discord domain");
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 });
