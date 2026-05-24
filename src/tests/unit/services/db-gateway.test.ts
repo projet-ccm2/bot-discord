@@ -110,6 +110,25 @@ describe("getChannelById", () => {
       ok: false,
       status: 500,
       statusText: "Internal Server Error",
+      text: async () => "something went wrong",
+    });
+
+    await expect(
+      getChannelById("https://gateway.example.com", "ch1"),
+    ).rejects.toMatchObject({
+      name: "DbGatewayError",
+      message: expect.stringContaining("DB-gateway error"),
+    });
+  });
+
+  it("should throw DbGatewayError on 500 when text() fails", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: "Internal Server Error",
+      text: async () => {
+        throw new Error("stream error");
+      },
     });
 
     await expect(
