@@ -153,7 +153,10 @@ describe("timedFetch", () => {
     ];
     const headers = actualInit.headers as Record<string, string>;
     expect(headers["x-vpc-token"]).toBeTruthy();
-    const decoded = jwt.verify(headers["x-vpc-token"], "secret") as jwt.JwtPayload;
+    const decoded = jwt.verify(
+      headers["x-vpc-token"],
+      "secret",
+    ) as jwt.JwtPayload;
     expect(decoded.aud).toBe("vpc-db-gateway");
   });
 
