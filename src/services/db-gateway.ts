@@ -51,6 +51,17 @@ export async function getChannelById(
   }
 
   if (!response.ok) {
+    let responseBody = "";
+    try {
+      responseBody = await response.text();
+    } catch {
+      // best-effort
+    }
+    logger.error("getChannelById → error response", {
+      status: response.status,
+      body: responseBody,
+      url,
+    });
     throw new DbGatewayError(
       `DB-gateway error: ${response.status} ${response.statusText}`,
       response.status,

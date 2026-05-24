@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { logger } from "./logger";
 
 const VPC_AUDIENCE = "vpc-db-gateway";
 const TOKEN_TTL_MS = 55 * 60 * 1000;
@@ -57,6 +58,11 @@ export async function timedFetch(
   };
   if (isCloudRun()) {
     const audience = extractAudience(options.url);
+    logger.debug("timedFetch → Cloud Run auth", {
+      url: options.url,
+      audience,
+      hasVpcSecret: Boolean(process.env.JWT_SECRET),
+    });
     const idToken = await fetchIdentityToken(audience);
     const vpcToken = generateVpcToken();
     const existingHeaders =
@@ -67,6 +73,10 @@ export async function timedFetch(
     };
     if (vpcToken) authHeaders["x-vpc-token"] = vpcToken;
     init = { ...init, headers: authHeaders };
+  } else {
+    logger.debug("timedFetch → no auth (K_SERVICE not set)", {
+      url: options.url,
+    });
   }
   return fetch(options.url, init);
 }
