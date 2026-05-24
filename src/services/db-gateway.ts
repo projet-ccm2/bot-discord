@@ -1,4 +1,5 @@
 import { logger } from "../utils/logger";
+import { timedFetch } from "../utils/http";
 
 export interface Channel {
   id: string;
@@ -33,9 +34,10 @@ export async function getChannelById(
 
   let response: Response;
   try {
-    response = await fetch(url, {
+    response = await timedFetch({
+      url,
       method: "GET",
-      headers: { Accept: "application/json" },
+      init: { method: "GET", headers: { Accept: "application/json" } },
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Network error";
